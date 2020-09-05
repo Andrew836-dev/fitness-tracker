@@ -2,13 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const db = require("./models");
 const logger = require("morgan");
-const path = require("path");
-const STATIC_PATH = path.join(__dirname, "public");
+const { join } = require("path");
 
+const STATIC_PATH = join(__dirname, "public");
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost/workout";
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-mongoose.connect("mongodb://localhost/workout", {
+mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
     useFindAndModify: false,
     useUnifiedTopology: true
@@ -16,7 +17,7 @@ mongoose.connect("mongodb://localhost/workout", {
 
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(join(__dirname, "public")));
 
 app.get("/:path", ({ params }, res) => {
     let target = "";
@@ -24,7 +25,7 @@ app.get("/:path", ({ params }, res) => {
     if (validPaths.some(validPath => validPath === params.path)) {
         target = params.path;
     }
-    res.sendFile(path.join(STATIC_PATH, target + ".html"));
+    res.sendFile(join(STATIC_PATH, target + ".html"));
 });
 
 app.get("/api/workouts", (req, res) => {
