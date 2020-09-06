@@ -1,18 +1,6 @@
 const db = require("../models");
-const { join } = require("path");
-
-const STATIC_PATH = join(__dirname, "public");
 
 module.exports = app => {
-    app.get("/:path", ({ params }, res) => {
-        let target = "";
-        const validPaths = ["exercise", "stats"]
-        if (validPaths.some(validPath => validPath === params.path)) {
-            target = params.path;
-        }
-        res.sendFile(join(STATIC_PATH, target + ".html"));
-    });
-
     app.get("/api/workouts", (req, res) => {
         db.Workout.find()
             .then(dbWorkouts => {
@@ -42,8 +30,8 @@ module.exports = app => {
             id, {
             $push: { exercises: exercises },
             $inc: { totalDuration: exercises.duration }
-        }, { 
-            new: true 
+        }, {
+            new: true
         }).then(dbWorkout => {
             res.json(dbWorkout);
         });

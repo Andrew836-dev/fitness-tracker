@@ -7,5 +7,6 @@ module.exports = app => {
     app.use(express.json());
     app.use(express.static("public"));
 
-    require("./controller")(app);
+    require("./api-controller")(app);
+    require("./html-controller")(app);
 }
