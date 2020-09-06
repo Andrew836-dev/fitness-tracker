@@ -6,4 +6,10 @@ describe("The Workout model", function () {
         const newWorkout = new Workout;
         expect(newWorkout.totalDuration).to.equal(0);
     });
+
+    it("Has an empty exercises array on creation", function() {
+        const newWorkout = new Workout;
+        expect(newWorkout.exercises).to.be.an("Array");
+        expect(newWorkout.exercises.length).to.equal(0);
+    });
 });
