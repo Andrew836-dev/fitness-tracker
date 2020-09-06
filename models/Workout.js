@@ -9,7 +9,8 @@ const WorkoutSchema = new Schema({
   },
   exercises: [
     {
-      type: Object
+        type: Schema.Types.ObjectId,
+        ref: "Exercise"
     }
   ],
   totalDuration: {
@@ -19,10 +20,5 @@ const WorkoutSchema = new Schema({
 });
 
 const Workout = mongoose.model("Workout", WorkoutSchema);
-
-WorkoutSchema.methods.setTotalWorkoutDuration = function () {
-  this.totalDuration = 0;
-  this.exercises.forEach(exercise => this.totalDuration += exercise.duration);
-}
 
 module.exports = Workout;
