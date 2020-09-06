@@ -5,8 +5,8 @@ module.exports = app => {
     app.use(logger("dev"));
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
-    app.use(express.static("public"));
-
     require("./api-controller")(app);
+
+    app.use(express.static("public"));
     require("./html-controller")(app);
 }
