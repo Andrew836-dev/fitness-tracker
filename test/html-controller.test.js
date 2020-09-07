@@ -8,7 +8,7 @@ const app = require("express")();
 require("../controllers")(app);
 
 module.exports = describe("HTML routes", function () {
-    it("Sends '404' on a bad request", function (done) {
+    it("Sends '404' on a bad request (e.g. '/love'", function (done) {
         chai.request(app)
             .get("/love")
             .then(response => {
@@ -18,7 +18,7 @@ module.exports = describe("HTML routes", function () {
             });
     });
 
-    it("Has a static folder", function (done) {
+    it("Has accessible javascript in a static folder", function (done) {
         chai.request(app)
             .get("/index.js")
             .end((err, { status, type }) => {
@@ -31,6 +31,16 @@ module.exports = describe("HTML routes", function () {
     it("Has a route for '/stats'", function (done) {
         chai.request(app)
             .get("/stats")
+            .then(response => {
+                expect(response.status).to.equal(200);
+                expect(response.type).to.have.string("text/html");
+                done();
+            });
+    });
+
+    it("Has a route for '/exercise'", function (done) {
+        chai.request(app)
+            .get("/exercise")
             .then(response => {
                 expect(response.status).to.equal(200);
                 expect(response.type).to.have.string("text/html");

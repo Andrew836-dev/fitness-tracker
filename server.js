@@ -15,5 +15,5 @@ require("./controllers")(app);
 
 app.listen(PORT, () => {
     console.log("Listening on https://localhost:" + PORT);
-    console.log(process.env.NODE_ENV)
+    console.log("Launch environment:", process.env.NODE_ENV || "development");
 });
