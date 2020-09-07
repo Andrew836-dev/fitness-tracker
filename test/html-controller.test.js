@@ -7,7 +7,7 @@ const expect = chai.expect;
 const app = require("express")();
 require("../controllers")(app);
 
-describe("HTML routes", function () {
+module.exports = describe("HTML routes", function () {
     it("Sends '404' on a bad request", function (done) {
         chai.request(app)
             .get("/love")
