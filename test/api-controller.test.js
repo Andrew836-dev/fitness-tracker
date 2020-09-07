@@ -1,6 +1,6 @@
 const app = require("express")();
 const mongoose = require("mongoose");
-const db = require("../models");
+// const db = require("../models");
 const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost/test"
 
 const chai = require("chai");
@@ -13,15 +13,14 @@ describe("API routes", function () {
     // This is used to have a consistent _id and to check that the totalDuration increases as expected
     const currentTestObject = {};
 
-    this.timeout(0);
+    this.timeout(30000);
     this.beforeAll(done => {
         mongoose.connect(MONGO_URI, {
-            autoIndex: false,
             useNewUrlParser: true,
             useFindAndModify: false,
             useUnifiedTopology: true
         }).then(() => {
-            db.Workout.collection.drop();
+            mongoose.connection.dropDatabase();
             done();
         });
     });
