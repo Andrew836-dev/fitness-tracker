@@ -4,11 +4,12 @@ module.exports = app => {
     app.get("/api/workouts", (req, res) => {
         // res.json({message: "This is the /api/workouts route"});
         db.Workout.find()
+            .sort({ day: 1 })
             .then(dbWorkouts => {
                 res.json(dbWorkouts);
             }).catch(error => {
                 console.error(error);
-                res.status(500).json({message: "Server error"});
+                res.status(500).json({ message: "Server error" });
             });
     });
 
@@ -18,7 +19,7 @@ module.exports = app => {
                 res.json(dbWorkouts);
             }).catch(error => {
                 console.error(error);
-                res.status(500).json({message: "Server error"});
+                res.status(500).json({ message: "Server error" });
             });
     });
 
@@ -29,7 +30,7 @@ module.exports = app => {
                 res.json(dbWorkout);
             }).catch(error => {
                 console.log(error);
-                res.status(500).json({message: "Server error"});
+                res.status(500).json({ message: "Server error" });
             });
     });
 
@@ -46,7 +47,7 @@ module.exports = app => {
             res.json(dbWorkout);
         }).catch(error => {
             console.error(error);
-            res.status(500).json({message: "Server error"});
+            res.status(500).json({ message: "Server error" });
         });
     });
 }

@@ -20,7 +20,7 @@ describe("API routes", function () {
             useFindAndModify: false,
             useUnifiedTopology: true
         }).then(() => {
-            mongoose.connection.dropDatabase();
+            mongoose.connection.dropCollection("workouts");
             done();
         });
     });
@@ -29,35 +29,14 @@ describe("API routes", function () {
         mongoose.disconnect();
     });
 
-    it("Returns a JSON array on the GET '/api/workouts' route", function (done) {
-        chai.request(app)
-            .get("/api/workouts")
-            .then(response => {
-                expect(response.status).to.equal(200);
-                expect(response.type).to.be.string("application/json");
-                expect(response.body).to.be.an("Array");
-                done();
-            });
-    });
-
-    it("Returns a JSON array on the GET '/api/workouts/range' route", function (done) {
-        chai.request(app)
-            .get("/api/workouts/range")
-            .then(response => {
-                expect(response.status).to.equal(200);
-                expect(response.type).to.be.string("application/json");
-                expect(response.body).to.be.an("Array");
-                done();
-            });
-    });
-
-    it("Posts a new workout on POST '/api/workouts'", function (done) {
+    it("Returns a new workout on POST '/api/workouts'", function (done) {
         chai.request(app)
             .post("/api/workouts")
             .then(({ status, type, body }) => {
                 expect(status).to.equal(200);
                 expect(type).to.be.string("application/json");
                 expect(body).to.be.an("Object");
+                expect(body.exercises.length).to.equal(0);
                 expect(body._id).to.not.be.undefined;
                 currentTestObject.workout = body;
                 done();
@@ -85,4 +64,47 @@ describe("API routes", function () {
                 done();
             });
     });
+
+    it("Returns a JSON array on the GET '/api/workouts' route", function (done) {
+        chai.request(app)
+            .get("/api/workouts")
+            .then(response => {
+                expect(response.status).to.equal(200);
+                expect(response.type).to.be.string("application/json");
+                expect(response.body).to.be.an("Array");
+                done();
+            });
+    });
+
+    it("GET '/api/workouts' orders the JSON array by the newest 'day' last", function (done) {
+        chai.request(app)
+            .post("/api/workouts")
+            .then(postResponse => {
+                expect(postResponse.status).to.equal(200);
+                chai.request(app)
+                    .get("/api/workouts")
+                    .then(getResponse => {
+                        expect(getResponse.status).to.equal(200);
+                        const lastIndex = getResponse.body.length - 1;
+                        getResponse.body.forEach((workout, index) => {
+                            if (index < lastIndex) {
+                                expect(Date.parse(getResponse.body[lastIndex].day)).to.be.greaterThan(Date.parse(workout.day));
+                            }
+                        });
+                        done();
+                    });
+            });
+    })
+
+    it("Returns a JSON array on the GET '/api/workouts/range' route", function (done) {
+        chai.request(app)
+            .get("/api/workouts/range")
+            .then(response => {
+                expect(response.status).to.equal(200);
+                expect(response.type).to.be.string("application/json");
+                expect(response.body).to.be.an("Array");
+                done();
+            });
+    });
+
 });
