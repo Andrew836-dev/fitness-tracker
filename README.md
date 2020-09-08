@@ -6,7 +6,8 @@ An app to help keep track of your fitness journey.
 1. [Dependencies](#Dependencies)
 2. [Usage](#Usage)
 3. [License](#License)
-4. [Questions](#Questions)
+4. [Tests](#Tests)
+5. [Questions](#Questions)
 ## Dependencies
 This app uses Node.js, mongoose for MongoDB, express for the server logic and morgan for logging.
 ## Usage

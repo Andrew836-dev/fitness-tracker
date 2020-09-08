@@ -1,17 +1,19 @@
-const app = require("express")();
+const express = require("express");
+const app = express();
+
 const mongoose = require("mongoose");
-// const db = require("../models");
 const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost/test"
 
 const chai = require("chai");
 const expect = chai.expect;
-chai.use(require("chai-http"));
+const http = require("chai-http");
+chai.use(http);
 
 require("../controllers")(app);
 
 describe("API routes", function () {
     // This is used to have a consistent _id and to check that the totalDuration increases as expected
-    const currentTestObject = {};
+    let currentTestWorkout = {};
 
     this.timeout(30000);
     this.beforeAll(done => {
@@ -38,29 +40,29 @@ describe("API routes", function () {
                 expect(body).to.be.an("Object");
                 expect(body.exercises.length).to.equal(0);
                 expect(body._id).to.not.be.undefined;
-                currentTestObject.workout = body;
+                currentTestWorkout = body;
                 done();
             });
     });
 
     it("Increases the totalDuration when you add an exercise with PUT /api/workouts/:id", function (done) {
         const duration = 10;
-        const workoutData = {
+        const testExercise = {
             type: "cardio",
             name: "Running",
             distance: 10,
             duration: duration
         };
         chai.request(app)
-            .put("/api/workouts/" + currentTestObject.workout._id)
-            .send(workoutData)
+            .put("/api/workouts/" + currentTestWorkout._id)
+            .send(testExercise)
             .then(({ status, type, body }) => {
                 expect(status).to.equal(200);
                 expect(type).to.be.string("application/json");
                 expect(body).to.be.an("Object");
                 expect(body.exercises.length).to.equal(1);
                 expect(body.totalDuration).to.equal(duration);
-                currentTestObject.workout = body;
+                currentTestWorkout = body;
                 done();
             });
     });
